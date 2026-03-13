@@ -7,6 +7,7 @@ class SimpleQueue<T>
     private T[] _arr;
     private int _count;
     private int _initialIndex = 0;
+    private int _backIndex = 0;
     public int Count => _count;
     public bool IsFull => _count == _arr.Length;
     public bool IsEmpty => _count == 0; 
@@ -22,22 +23,26 @@ class SimpleQueue<T>
             Console.WriteLine("큐가 가득 찼습니다.");
             return;
         }
-        _arr[_count++] = item;
+        _arr[_backIndex] = item;
+        _backIndex++;
+        _backIndex %= _arr.Length;
+        _count++;
     }
     public T Dequeue()
     {
         if (IsEmpty) { Console.WriteLine("큐가 비어있습니다."); return default; }
         T item = _arr[_initialIndex];
+        _arr[_initialIndex] = default;
         _initialIndex++;
+        _initialIndex %= _arr.Length;   
         _count--;
-        _arr[0] = default;
         return item;
 
     }
     public T Peek()
     {
         if (IsEmpty) { Console.WriteLine("큐가 비어있습니다."); return default; }
-        return _arr[0]; 
+        return _arr[_initialIndex]; 
     }
 
     public override string ToString()
